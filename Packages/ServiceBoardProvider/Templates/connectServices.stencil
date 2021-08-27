@@ -1,0 +1,31 @@
+
+{% macro swiftifyMethodName name %}{{ name | replace:'"','' }}{% endmacro %}
+{% macro registerService type method %}
+    registry.registerService({{method.parameters.last.type.name}}.self, factory: {{type.name}}.onDiscovery)
+{% endmacro %}
+{% macro callDiscoveryOnly type %}
+    {{type.name}}.onDiscovery(resolver: registry.resolve(),
+                                contract: EmptyServiceContract())
+{% endmacro %}
+
+import ServiceBoard
+import ServiceContracts
+{% for type in types.types where type.implements.DiscoverableService and type.kind != "protocol" %}
+      {% for variable in type.variables where variable.name == "moduleName" %}
+import {% call swiftifyMethodName variable.defaultValue %}
+      {% endfor %}
+{% endfor %}
+
+struct DiscoveredServices: DiscoveredEntry {
+  func register(registry: ServiceRegitry) {
+{% for type in types.types where type.implements.DiscoverableService and type.kind != "protocol" %}
+{% for method in type.rawMethods where method.shortName == "onDiscovery" %}
+{% if method.parameters.last.type.name != "EmptyServiceContract" %}
+    {% call registerService type method %}
+{% else %}
+    {% call callDiscoveryOnly type%}
+{% endif%}   
+{% endfor %}
+{% endfor %}
+  }
+}

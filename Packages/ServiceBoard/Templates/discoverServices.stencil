@@ -1,0 +1,27 @@
+{% macro swiftifyModuleName name %}{{ name | replace:'"','' }}{% endmacro %}
+{% macro swiftifyMethodName name %}{{ name | replace:'"','' | lowerFirstWord }}{% endmacro %}
+{% macro moduleName type %}{% for variable in type.variables where variable.name == "moduleName" %}{% call swiftifyMethodName variable.defaultValue %}_{% endfor %}{% endmacro %}
+{% macro genMethod type method %}
+    func {% call moduleName type %}{% call swiftifyMethodName type.name %}(_ contract: {{method.parameters.last.type.name}}) -> {{method.parameters.last.type.name}}.Content {
+        resolveService({{method.parameters.last.type.name}}.self, argument: contract)!
+    }
+{% endmacro %}
+{% macro genServices %}
+
+{% for type in types.types where type.implements.DiscoverableService and type.kind != "protocol" %}
+{% for method in type.rawMethods where method.selectorName == "onDiscovery(resolver:contract:)" and method.parameters.last.type.name != "EmptyServiceContract" %}
+
+public extension ServiceBoard {    
+    {% call genMethod type method %}
+}
+{% endfor %}
+{% endfor %}
+{% endmacro %}
+{% macro genImports %}
+import Swinject
+import ServiceContracts
+{% endmacro %}
+
+{% call genImports %}
+
+{% call genServices%} 

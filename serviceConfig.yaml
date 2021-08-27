@@ -1,0 +1,5 @@
+sources:
+  - ./Packages/Features
+#   echo ${PROJECT_DIR}/Packages/Core/Sources
+# echo ${SOURCE_ROOT}/HostApp/__generated__/Discovered
+# sourcery --sources ${PROJECT_DIR}/Packages/Features --sources ${PROJECT_DIR}/Packages/Core --templates ${PROJECT_DIR}/Templates/connectServices.stencil --output ${SOURCE_ROOT}/HostApp/__generated__/Discovered.swift
