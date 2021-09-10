@@ -35,7 +35,7 @@ def getCMDString(options)
     end
 
     resolvedSources = sources.map { |item| File.expand_path(item, options[:configPath]) }
-    sourcesString = "--sources " + resolvedSources.join("--sources")
+    sourcesString = "--sources " + resolvedSources.join(" --sources ")
     
     "sourcery #{sourcesString} --templates #{options[:template]} --output #{options[:output]}"
 end

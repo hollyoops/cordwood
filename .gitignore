@@ -12,6 +12,13 @@ Pods/
 .AppleDouble
 .LSOverride
 
+**/.build
+*.xcodeproj
+*.xcworkspace
+
+Tuist/Dependencies/
+Derived/
+
 # Icon must end with two \r
 Icon
 

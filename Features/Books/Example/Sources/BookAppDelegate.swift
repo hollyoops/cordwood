@@ -1,0 +1,10 @@
+import UIKit
+import Foundation
+import ServiceBoard
+
+class BookAppDelegate: DefaultAppDelegate {
+    override init() {
+        super.init()
+        self.attachServiceBoard(ServiceBoard(serviceEntry: DiscoveredServices()))
+    }
+}
