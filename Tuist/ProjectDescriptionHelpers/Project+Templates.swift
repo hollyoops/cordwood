@@ -19,7 +19,10 @@ extension Project {
         
         return Project(name: appName,
                        organizationName: "io.microFE.\(appName)",
-                       packages: [],
+                       packages: [
+                        .local(path: "./Core/ServiceBoard"),
+                        .remote(url: "https://github.com/hollyoops/RecoilSwift.git", requirement: .exact("0.2.1"))
+                       ],
                        targets: Target.makeTargets(appConfig: appConfig),
                        schemes: exampleSchemes + [appScheme]
         )
@@ -41,18 +44,25 @@ extension Project {
 }
 
 extension Target {
+    static let infoPlist: [String: InfoPlist.Value] = [
+        "UILaunchStoryboardName": .string("LaunchScreen")
+    ]
+    
     public static func makeTargets(appConfig: AppConfig) -> [Target] {
-        makeFeatureTargets(appConfig) + makeHostTargets(appConfig)
+        makeCoreKitTargets()
+        + makeFeatureTargets(appConfig)
+        + makeHostTargets(appConfig)
     }
     
     static func makeHostTargets(_ appInfo: AppConfig) -> [Target] {
         let name = appInfo.name
+        
         return [
             Target(name: name,
                    platform: .iOS,
                    product: .app,
                    bundleId: "io.microFE.\(name)",
-                   infoPlist: .default,
+                   infoPlist: .extendingDefault(with: infoPlist),
                    sources: ["\(appInfo.path)/Sources/**/*.swift"],
                    resources: ["\(appInfo.path)/Resources/**/*"],
                    dependencies: appInfo.targetDependencies
@@ -69,6 +79,19 @@ extension Target {
                    ] + appInfo.testDependencies.map({ .target(name: $0) }))
         ]
     }
+    
+    static func makeCoreKitTargets() -> [Target] {
+       let coreDependencies = ["RecoilSwift", "ServiceBoard"].map(TargetDependency.external(name:))
+       return [Target(name: "CoreKit",
+              platform: .iOS,
+              product: .framework,
+              bundleId: "io.microFE.core",
+              infoPlist: .default,
+              sources: [],
+              resources: [],
+              dependencies: coreDependencies
+             )]
+   }
     
     static func makeFeatureTargets(_ appInfo: AppConfig) -> [Target] {
         appInfo.features.flatMap {
@@ -135,7 +158,7 @@ extension Target {
                                          platform: .iOS,
                                          product: .app,
                                          bundleId: "io.microFE.\(name)Example",
-                                         infoPlist: .default,
+                                         infoPlist: .extendingDefault(with: infoPlist),
                                          sources: ["\(module.path)/Example/Sources/**/*.swift"],
                                          resources: ["\(module.path)/Example/Resources/**"],
                                          dependencies:
