@@ -8,7 +8,7 @@ struct BookExample: App {
     
     var body: some Scene {
         WindowGroup {
-            appDelegate.serviceBoard.service(for: ProductListRequest())
+            appDelegate.serviceBoard.spc.getService(request: ProductListRequest())!
                 .onOpenURL { url in
                     print("Received URL: \(url)")
                  }

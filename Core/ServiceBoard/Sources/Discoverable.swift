@@ -8,12 +8,15 @@ public protocol ServiceRegitry {
     func resolve() -> ServiceResolver
 }
 
+public protocol ServiceProcedureCall {
+    func getService<T: ServiceContract>(request contract: T) -> T.Response?
+}
+
 public protocol ServiceResolver {
-    func service<T: ServiceContract>(for contract: T) -> T.Response
+    var spc: ServiceProcedureCall { get }
     
     var appStatusService: AppStatusService { get }
 }
-
 
 public protocol DiscoverableService {
     var moduleName: String { get }

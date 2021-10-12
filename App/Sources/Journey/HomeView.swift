@@ -21,23 +21,23 @@ public struct HomeView: HookView {
     }
     
     public var hookBody: some View {
-        let cartStore = serviceBoard.service(for: CartServiceRequest())
+        let cartStore = serviceBoard.spc.getService(request: CartServiceRequest())!
         let badgeText = useRecoilValue(cartStore.badgeText)
         
         TabView {
-            serviceBoard.service(for: ProductListRequest())
+            serviceBoard.spc.getService(request: ProductListRequest())!
                 .tabItem {
                     Label("Store", systemImage: "books.vertical")
                 }
             
-            serviceBoard.service(for: CartEntryRequest())
+            serviceBoard.spc.getService(request: CartEntryRequest())!
                 .tabItem {
                     Label("Cart", systemImage: "cart")
                 }.ifLet(badgeText) {
                     $0.badge(Text($1))
                 }
             
-            serviceBoard.service(for: CustomerEntryRequest())
+            serviceBoard.spc.getService(request: CustomerEntryRequest())!
                 .tabItem {
                     Label("Me", systemImage: "person.crop.circle")
                 }

@@ -4,6 +4,7 @@ public class ServiceBoard {
     // PlatformService
     private let appStatus: AppStatusProtocol
     private let entry: DiscoveredEntry
+    private let serviceSPC: SPC
     
     // OndemandService
     let container = Container()
@@ -12,6 +13,7 @@ public class ServiceBoard {
          appStatusService: AppStatusProtocol = DefaultAppStatusService()) {
         self.entry = serviceEntry
         self.appStatus = appStatusService
+        self.serviceSPC = SPC(container: container)
     }
     
     public var registry: ServiceRegitry {
@@ -43,8 +45,21 @@ extension ServiceBoard: ServiceRegitry {
 }
 
 extension ServiceBoard: ServiceResolver {
+    public var spc: ServiceProcedureCall {
+        serviceSPC
+    }
+    
     public var appStatusService: AppStatusService {
         appStatus
+    }
+}
+
+
+struct SPC: ServiceProcedureCall {
+    private let container: Container
+    
+    init(container: Container) {
+        self.container = container
     }
     
     public func resolveService<Service: ServiceContract>(
@@ -54,7 +69,7 @@ extension ServiceBoard: ServiceResolver {
         container.resolve(Service.Response.self, name: nil, argument: argument)
     }
     
-    public func service<T: ServiceContract>(for contract: T) -> T.Response {
-        resolveService(T.self, argument: contract)!
+    public func getService<T: ServiceContract>(request contract: T) -> T.Response? {
+        resolveService(T.self, argument: contract)
     }
 }

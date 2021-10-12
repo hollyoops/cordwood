@@ -38,7 +38,11 @@ extension View {
 extension AllBooksView: DiscoverableService {
     public static func onDiscovery(resolver: ServiceResolver, contract: ProductListRequest) -> ProductListRequest.Response {
         let add = { (context: RecoilCallbackContext, book: Book) in
-            let service = resolver.service(for: CartServiceRequest())
+            guard let service = resolver.spc.getService(request: CartServiceRequest()) else {
+                
+                print("Cart Service Not Found!")
+                return
+            }
             guard let bookJson = book.json else { return }
             
             _ = service.addBook(context: context, newBook: bookJson)
