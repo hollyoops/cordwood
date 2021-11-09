@@ -4,11 +4,8 @@
 
 
 import ServiceBoard
-import Books
-import BooksContracts
 
 struct DiscoveredServices: DiscoveredEntry {
   func register(registry: ServiceRegitry) {
-    registry.registerService(ProductListRequest.self, factory: AllBooksView.onDiscovery)
   }
 }

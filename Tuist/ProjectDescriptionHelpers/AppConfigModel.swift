@@ -14,8 +14,6 @@ protocol BasicConfig {
     var path: String { get }
     
     var targetDependencies: [TargetDependency] { get }
-    
-    
 }
 
 extension BasicConfig {

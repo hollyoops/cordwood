@@ -81,7 +81,7 @@ extension Target {
     }
     
     static func makeCoreKitTargets() -> [Target] {
-       let coreDependencies = ["RecoilSwift", "ServiceBoard"].map(TargetDependency.external(name:))
+       let coreDependencies = ["RecoilSwift", "ServiceBoard", "Hooks"].map(TargetDependency.external(name:))
        return [Target(name: "CoreKit",
               platform: .iOS,
               product: .framework,
