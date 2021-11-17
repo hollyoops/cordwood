@@ -19,6 +19,7 @@ protocol BasicConfig {
 extension BasicConfig {
     var platformDependencies: [TargetDependency] {
         [.target(name: "CoreKit")]
+//        [.external(name: "ServiceBoard"), .external(name: "RecoilSwift")]
     }
 }
 

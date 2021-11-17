@@ -19,10 +19,7 @@ extension Project {
         
         return Project(name: appName,
                        organizationName: "io.microFE.\(appName)",
-                       packages: [
-                        .local(path: "./Core/ServiceBoard"),
-                        .remote(url: "https://github.com/hollyoops/RecoilSwift.git", requirement: .exact("0.2.1"))
-                       ],
+                       packages: [],
                        targets: Target.makeTargets(appConfig: appConfig),
                        schemes: exampleSchemes + [appScheme]
         )
@@ -49,9 +46,9 @@ extension Target {
     ]
     
     public static func makeTargets(appConfig: AppConfig) -> [Target] {
-        makeCoreKitTargets()
-        + makeFeatureTargets(appConfig)
-        + makeHostTargets(appConfig)
+        makeCoreKitTargets() +
+        makeFeatureTargets(appConfig) +
+        makeHostTargets(appConfig)
     }
     
     static func makeHostTargets(_ appInfo: AppConfig) -> [Target] {
@@ -81,7 +78,7 @@ extension Target {
     }
     
     static func makeCoreKitTargets() -> [Target] {
-       let coreDependencies = ["RecoilSwift", "ServiceBoard", "Hooks"].map(TargetDependency.external(name:))
+       let coreDependencies = ["RecoilSwift", "ServiceBoard"].map(TargetDependency.external(name:))
        return [Target(name: "CoreKit",
               platform: .iOS,
               product: .framework,
